@@ -8,12 +8,15 @@ from nltk.stem import WordNetLemmatizer
 
 from keras.models import load_model
 
+import requests
+api_key = "f1d596b7f4a4a3ddd4d1faddd5c337f4"
+
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open('intents.json').read())
 
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
-model = load_model('chatbot_model.model')
+model = load_model('chatbot_model.h5')
 
 def clean_up_sentene(sentence):
     sentence_words = nltk.word_tokenize(sentence)
@@ -40,12 +43,33 @@ def predict_class(sentence):
         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
     return return_list
 
+def get_weather(city):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    return data
+
+
 def get_response(intents_list, intents_json):
     tag = ints[0]['intent']
     list_of_intents = intents_json['intents']
     for i in list_of_intents:
         if i['tag']  == tag:
             result = random.choice(i['responses'])
+            if tag == "weather":
+                city = "kilkis"
+                # Call the OpenWeatherMap API to get the weather data for the city
+                data = get_weather(city)
+
+                # Get the weather description and temperature from the API response
+                description = data['weather'][0]['description']
+                temperature = data['main']['temp']
+
+                # Choose a random response from the intents.json file and replace placeholders with actual values
+                response = random.choice(i['responses'])
+                response = response.format(city=city, description=description, temperature=temperature)
+                result = response
+                break
             break
     return result
 

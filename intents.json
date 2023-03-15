@@ -39,7 +39,14 @@
 
 
     {"tag" : "weather",
-    "patterns": ["Whats the weather like today?","Can you tell me the weather forecast"],
-    "responses": ["I cant responde to that yet"]
+    "patterns": ["What is the weather like?",
+    "How's the weather?",
+    "What's the temperature?",
+    "What's the weather forecast?",
+    "Tell me the weather",
+    "What's the weather today?",
+    "What's the weather tomorrow?"],
+    "responses": ["The weather in {city} is {description} with a temperature of {temperature} degrees Celsius.",
+                    "Right now in {city} it is {description} with a temperature of {temperature} degrees Celsius."]
     }
 ]}
