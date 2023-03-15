@@ -9,7 +9,7 @@ from nltk.stem import WordNetLemmatizer
 from keras.models import load_model
 
 import requests
-api_key = "f1d596b7f4a4a3ddd4d1faddd5c337f4"
+import api_token
 
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open('intents.json').read())
@@ -44,7 +44,7 @@ def predict_class(sentence):
     return return_list
 
 def get_weather(city):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_token.api_key}&units=metric"
     response = requests.get(url)
     data = response.json()
     return data
@@ -57,7 +57,8 @@ def get_response(intents_list, intents_json):
         if i['tag']  == tag:
             result = random.choice(i['responses'])
             if tag == "weather":
-                city = "kilkis"
+                print("Please enter a city:")
+                city = input()
                 # Call the OpenWeatherMap API to get the weather data for the city
                 data = get_weather(city)
 
