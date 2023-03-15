@@ -4,7 +4,6 @@ import pickle
 import numpy as np
 
 import nltk
-nltk.download('wordnet')
 from nltk.stem import WordNetLemmatizer
 
 from keras.models import Sequential
@@ -37,7 +36,7 @@ pickle.dump(words, open('words.pkl', 'wb'))
 #Saves words to file name words.pkl in binary mode. 'wb' flah indicates that the file is being opened for writing in binary mode
 #The pickle.dump function serializes the words object and writes it to the file
 #By saving these variables to disk, i can load them later without having to re-run the code to generate them.This is useful if you have a large dataset that takes a long time to process or if you want to share the variables with others wwho dont have access to the original data
-pickle.dump(words, open('classes.pkl', 'wb'))
+pickle.dump(classes, open('classes.pkl', 'wb'))
 
 #I am doing this because these are not numerical values and to use them in a neural network i need numerical values
 training = []
@@ -83,6 +82,5 @@ model.add(Dense(len(train_y[0]), activation='softmax'))
 sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
-model.save('chatbot_model.model')
-print("Done")
+hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
+model.save('chatbot_model.h5',hist)
